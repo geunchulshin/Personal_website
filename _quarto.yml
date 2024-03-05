@@ -1,8 +1,9 @@
 project:
   type: website
+  output-dir: docs
 
 website:
-  title: "Personal_website"
+  title: "Geunchul Shin's personal website"
   navbar:
     left:
       - href: index.qmd
