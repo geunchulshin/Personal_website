@@ -2,11 +2,20 @@
 title: "Geunchul Shin's personal website"
 ---
 
-This is a Quarto website.
+Welcome to my website!
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+My name is Geunchul Shin, currently attending University of Toronto majoring in African Studies and minoring in mathematics and statistics. It is a mix that shows my love for cultural insights with a small interest in numbers. But, life isn't all about textbooks and equations for me.
+
+Click to see my [resume](resume.docx.pdf)
+
+Click to see my [CV](CV.pdf)
+
+I am an international student born in Suwon, Korea. I've lived in Canada for almost a decade. For people who are not familiar where Suwon is located: this is where my hometown, Suwon is located.
 
 ```{r}
+#| echo: false
+#| warning: false
+#| message: false
 library(babynames)
 library(leaflet)
 library(mapdeck)
@@ -14,17 +23,64 @@ library(shiny)
 library(tidyverse)
 library(troopdata)
 library(usethis)
+library(dplyr)
+library(plotly)
+
 bases <- get_basedata()
 
-# Some of the bases include unexpected characters which we need to address
-Encoding(bases$basename) <- "latin1"
+filtered_bases <- bases %>%
+  filter((countryname == "Korea, South"& basename == "Suwon AB, Suwon"))
 
-leaflet(data = bases) |>
-  addTiles() |> # Add default OpenStreetMap map tiles
+# Now apply the encoding just in case
+Encoding(filtered_bases$basename) <- "latin1"
+
+# Use leaflet to plot only these locations
+leaflet(data = filtered_bases) %>%
+  addTiles() %>%
   addMarkers(
-    lng = bases$lon,
-    lat = bases$lat,
-    popup = bases$basename,
-    label = bases$countryname
+    lng = filtered_bases$lon,
+    lat = filtered_bases$lat,
+    popup = filtered_bases$basename,
+    label = filtered_bases$countryname
   )
 ```
+
+\n When I'm not deep in study, you can find me lost in a good game, strumming away on my guitar, catching the latest movies, or vibing to some great tunes. Each of these escapes offers me a different flavor of creativity and relaxation, shaping who I am outside the academic world. 
+
+Looking ahead, I've got big plans to merge my creative side with my analytical skills by launching a marketing business in Korea. I'm drawn to Korea's vibrant culture and tech scene, and I can't wait to dive into the marketing sphere there, bringing fresh, data-driven strategies to the table.
+
+**FUN FACT:** (not really fun)\n
+The birthrate in korea has been decreasing significantly. I performed a simulation and put a visualization so that you can see how bad it is. Check out this cool interactive plot
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+library(plotly)
+
+# Adjusted hypothetical data with non-linear decline and fluctuations
+years <- 2000:2020
+# Create a non-linear decline with some random fluctuations
+set.seed(123) # Ensure reproducibility
+birth_rate <- seq(15, 6, length.out = length(years)) + rnorm(length(years), 0, 0.5)
+
+# Create a data frame
+data <- data.frame(
+  Year = years,
+  BirthRate = birth_rate
+)
+
+# Create an interactive plot
+p <- plot_ly(data, x = ~Year, y = ~BirthRate, type = 'scatter', mode = 'lines+markers',
+             line = list(color = 'blue')) %>%
+  layout(title = 'Simulated Decrease in Korea\'s Birth Rate (2000-2020)',
+         xaxis = list(title = 'Year'),
+         yaxis = list(title = 'Birth Rate (per 1000 people)'))
+
+# Print the plot
+p
+
+```
+
+Thank you for visiting my website.
